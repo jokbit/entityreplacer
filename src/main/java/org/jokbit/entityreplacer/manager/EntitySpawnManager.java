@@ -38,11 +38,6 @@ public class EntitySpawnManager {
                                         new ReplaceInfo(
                                                 replaceData.replacers()
                                                         .stream()
-                                                        .filter(replacer -> Config.getReplaceData()
-                                                                .stream()
-                                                                .map(ReplaceData::replaceds)
-                                                                .flatMap(Collection::stream)
-                                                                .noneMatch((replaced) -> replaced.equals(mobId)))
                                                         .toList(),
                                                 replaceData.chance(),
                                                 replaceData.rolls(),
