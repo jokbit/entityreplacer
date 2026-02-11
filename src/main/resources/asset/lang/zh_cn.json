@@ -1,0 +1,5 @@
+{
+  "tip.insconfig.no_config_file": "没有有效的配置文件",
+  "tip.insconfig.succ_to_config_files": "成功配置%d个文件",
+  "tip.insconfig.fail_to_config_files": "以下文件配置失败：%s"
+}

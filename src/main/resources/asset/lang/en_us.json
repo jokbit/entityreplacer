@@ -1,0 +1,5 @@
+{
+  "tip.insconfig.no_config_file": "no valid config file",
+  "tip.insconfig.succ_to_config_files": "success to config %d files",
+  "tip.insconfig.fail_to_config_files": "config fail:%s"
+}

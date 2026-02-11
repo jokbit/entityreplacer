@@ -10,4 +10,9 @@ public record Replacer(
         CompoundTag nbt,
         int weight
 ) {
+    public Replacer {
+        if (nbt == null) {
+            nbt = new CompoundTag();
+        }
+    }
 }

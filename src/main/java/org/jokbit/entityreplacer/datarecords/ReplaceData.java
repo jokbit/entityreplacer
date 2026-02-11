@@ -7,8 +7,8 @@ public record ReplaceData(
         Set<Replacer> replacers,
         double chance,
         int rolls,
-        boolean additionMode,
-        boolean existed
+        boolean join,
+        boolean additionMode
 ) {
     public ReplaceData {
         if (replaceds == null) {

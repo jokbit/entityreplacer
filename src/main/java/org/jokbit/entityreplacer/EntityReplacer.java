@@ -5,10 +5,15 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import org.jokbit.entityreplacer.listener.EntityLoginListener;
+import org.apache.commons.lang3.tuple.Pair;
+import org.jokbit.entityreplacer.listener.EntityJoinListener;
+import org.jokbit.entityreplacer.listener.MobSpawnListener;
 import org.jokbit.entityreplacer.listener.ServerTickListener;
-import org.jokbit.entityreplacer.manager.EntitySpawnManager;
+import org.jokbit.entityreplacer.manager.ReplacerSpawnManager;
 import org.slf4j.Logger;
+
+import java.nio.file.Path;
+import java.util.Set;
 
 @Mod(org.jokbit.entityreplacer.EntityReplacer.MODID)
 public class EntityReplacer {
@@ -18,21 +23,48 @@ public class EntityReplacer {
 
     public EntityReplacer(FMLJavaModLoadingContext context) {
         IEventBus modEventBus = context.getModEventBus();
-
         modEventBus.addListener(this::commonSetup);
     }
 
-    private void commonSetup(final FMLCommonSetupEvent event) {
-        // 初始化配置
-        Config.mkConfigDir();
+    public static Pair<Set<Path>, Set<Path>> reload() {
+        EntityJoinListener.unRegister();
+        MobSpawnListener.unRegister();
+        ServerTickListener.unRegister();
+        Pair<Set<Path>, Set<Path>> res = load();
+        if (res.getRight().isEmpty()) {
+            return res;
+        }
+        ReplacerSpawnManager.getInstance().reload();
+        return res;
+    }
 
-        if (Config.readReplaceData()) {
-            EntitySpawnManager.getInstance();
+    public static Pair<Set<Path>, Set<Path>> load() {
+        Pair<Set<Path>, Set<Path>> res = Config.readReplaceData();
+        Set<Path> successSet = res.getRight();
+        if (successSet.isEmpty()) {
+            return res;
         }
 
-        if (EntitySpawnManager.getInstance().needReplaceEntity()) {
-            EntityLoginListener.register();
+        if (ReplacerSpawnManager.getInstance().hasSpawnReplaced()
+                || ReplacerSpawnManager.getInstance().hasJoinedReplaced()) {
             ServerTickListener.register();
         }
+
+        if (ReplacerSpawnManager.getInstance().hasSpawnReplaced()) {
+            MobSpawnListener.register();
+        }
+
+        if (ReplacerSpawnManager.getInstance().hasJoinedReplaced()) {
+            EntityJoinListener.register();
+        }
+
+        return res;
+    }
+
+    private void commonSetup(final FMLCommonSetupEvent event) {
+
+        Config.mkConfigDir();
+
+        load();
     }
 }

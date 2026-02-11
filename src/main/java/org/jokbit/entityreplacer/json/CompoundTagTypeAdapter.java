@@ -13,7 +13,11 @@ public class CompoundTagTypeAdapter implements JsonSerializer<CompoundTag>, Json
     @Override
     public CompoundTag deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
             throws JsonParseException {
-        
+
+        if (json == null) {
+            return new CompoundTag();
+        }
+
         if (json.isJsonNull()) {
             return new CompoundTag();
         }
