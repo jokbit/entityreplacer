@@ -44,6 +44,10 @@ public class EntityJoinListener {
             return;
         }
 
+        if (replacedEntity.getTags().contains(ReplacerSpawnManager.KEY_REPLACED_TAG)) {
+            return;
+        }
+
         String mobId = EntityType.getKey(replacedEntity.getType()).toString();
         if (!ReplacerSpawnManager.getInstance().testJoin(mobId)) {
             return;

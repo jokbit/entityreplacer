@@ -23,6 +23,8 @@ public class ReplacerSpawnManager {
 
     private static volatile ReplacerSpawnManager INSTANCE;
 
+    public static final String KEY_REPLACED_TAG = "entity_replaced";
+
     public final Queue<SimpleEntityInfo> replacerInfos = new ConcurrentLinkedDeque<>();
 
     public final Map<String, ReplaceInfo> spawnReplaceMap = Maps.newHashMap();
@@ -53,12 +55,14 @@ public class ReplacerSpawnManager {
                                         new ReplaceInfo(
                                                 replaceData.replacers()
                                                         .stream()
+                                                        .filter(Objects::nonNull)
                                                         .toList(),
                                                 replaceData.chance(),
                                                 replaceData.rolls(),
                                                 replaceData.additionMode(),
                                                 replaceData.replacers()
                                                         .stream()
+                                                        .filter(Objects::nonNull)
                                                         .mapToInt(Replacer::weight)
                                                         .sum()
                                         )))
@@ -98,12 +102,14 @@ public class ReplacerSpawnManager {
                                         new ReplaceInfo(
                                                 replaceData.replacers()
                                                         .stream()
+                                                        .filter(Objects::nonNull)
                                                         .toList(),
                                                 replaceData.chance(),
                                                 replaceData.rolls(),
                                                 replaceData.additionMode(),
                                                 replaceData.replacers()
                                                         .stream()
+                                                        .filter(Objects::nonNull)
                                                         .mapToInt(Replacer::weight)
                                                         .sum()
                                         )))

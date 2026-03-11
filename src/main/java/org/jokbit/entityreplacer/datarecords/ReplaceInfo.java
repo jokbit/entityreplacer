@@ -14,7 +14,9 @@ public record ReplaceInfo(
         this(replacers, chance, rolls, additionMode, totalWeight, new int[replacers.size()]);
         int index = 0;
         for (Replacer replacer : replacers) {
-            weightList[index] = Math.max(0, replacer.weight()) + Math.max(0, index > 0 ? weightList[index - 1] : 0);
+            if (replacer != null) {
+                weightList[index] = Math.max(0, replacer.weight()) + Math.max(0, index > 0 ? weightList[index - 1] : 0);
+            }
             index++;
         }
     }
