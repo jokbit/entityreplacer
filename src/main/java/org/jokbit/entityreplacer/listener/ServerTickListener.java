@@ -1,9 +1,13 @@
 package org.jokbit.entityreplacer.listener;
 
 import com.mojang.logging.LogUtils;
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.MobSpawnType;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -49,11 +53,16 @@ public class ServerTickListener {
                     EntityType.byString(replacer.mobId())
                             .map(entityType -> entityType.create(serverLevel))
                             .map(replacerEntity -> {
+                                replacerEntity.setPos(replacer.x(), replacer.y(), replacer.z());
+                                if (replacerEntity instanceof Mob mob) {
+                                    DifficultyInstance difficulty = serverLevel.getCurrentDifficultyAt(replacerEntity.blockPosition());
+                                    mob.finalizeSpawn(serverLevel, difficulty, MobSpawnType.NATURAL, null, null);
+                                }
                                 CompoundTag compoundTag = new CompoundTag();
                                 replacerEntity.saveWithoutId(compoundTag);
                                 compoundTag.merge(replacer.nbt());
+                                compoundTag.putBoolean(ReplacerSpawnManager.KEY_REPLACED_TAG, true);
                                 replacerEntity.load(compoundTag);
-                                replacerEntity.setPos(replacer.x(), replacer.y(), replacer.z());
                                 return replacerEntity;
                             })
                             .ifPresent(serverLevel::addFreshEntity);

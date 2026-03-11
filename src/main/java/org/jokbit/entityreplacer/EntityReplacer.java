@@ -21,8 +21,8 @@ public class EntityReplacer {
 
     private static final Logger LOGGER = LogUtils.getLogger();
 
-    public EntityReplacer(FMLJavaModLoadingContext context) {
-        IEventBus modEventBus = context.getModEventBus();
+    public EntityReplacer() {
+        IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
         modEventBus.addListener(this::commonSetup);
     }
 

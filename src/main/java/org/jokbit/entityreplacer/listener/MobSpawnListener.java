@@ -35,6 +35,11 @@ public class MobSpawnListener {
 
     public void filterMobSpawn(MobSpawnEvent.FinalizeSpawn event) {
         Mob replacedEntity = event.getEntity();
+
+        if (replacedEntity.getTags().contains(ReplacerSpawnManager.KEY_REPLACED_TAG)) {
+            return;
+        }
+
         String mobId = EntityType.getKey(replacedEntity.getType()).toString();
         if (!ReplacerSpawnManager.getInstance().testSpawn(mobId)) {
             return;
